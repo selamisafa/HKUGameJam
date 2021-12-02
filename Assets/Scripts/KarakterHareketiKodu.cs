@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class KarakterHareketiKodu : MonoBehaviour
 {
@@ -19,6 +21,12 @@ public class KarakterHareketiKodu : MonoBehaviour
     public Transform yerKontrolu;
 
     public AudioSource jump;
+
+    public bool haveWrench = false;
+
+    public List<GameObject> kalpler;
+
+    public Sprite doluKalp;
     // Start is called before the first frame update
     void Start()
     {
@@ -63,6 +71,14 @@ public class KarakterHareketiKodu : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
+        if (other.gameObject.tag == "KirilabilenPlatform")
+        {
+            if (!haveWrench)
+            {
+                other.gameObject.GetComponent<HingeJoint2D>().useLimits = false;
+            }
+        }
+        
         anim.SetBool("onAir", false);
     }
 
@@ -71,6 +87,7 @@ public class KarakterHareketiKodu : MonoBehaviour
         if (other.tag == "Anahtar")
         {
             Debug.Log("anahtar toplandi!");
+            other.GetComponent<AnahtarKapiKodu>().KapiyiAc();
             
             Destroy(other.gameObject);
         }
@@ -78,8 +95,34 @@ public class KarakterHareketiKodu : MonoBehaviour
         if (other.tag == "Kalp")
         {
             Debug.Log("Kalp toplandi!");
+
+            if (kalpler.Count > 0)
+            {
+                kalpler[0].GetComponent<Image>().sprite = doluKalp;
+                kalpler.RemoveAt(0);
+            }
+            
+            PlayerPrefs.SetInt("kalp", PlayerPrefs.GetInt("kalp", 0) + 1);
             
             Destroy(other.gameObject);
+        }
+        
+        if (other.CompareTag("Finish"))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
+
+        if (other.tag == "IngilizAnahtari")
+        {
+            Debug.Log("Ingiliz anahtari toplandi!");
+
+            haveWrench = true;
+            Destroy(other.gameObject);
+        }
+
+        if (other.CompareTag("Lav"))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 
