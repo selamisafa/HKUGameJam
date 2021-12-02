@@ -1,4 +1,9 @@
+Oyunu Oynayabileceğiniz Link:
+
+https://piskafir.itch.io/hku-gamejam-egitimi
+
 Kullanılan Assetlerin Linkleri: 
+
 https://www.kenney.nl/assets/background-elements-redux
 
 https://www.kenney.nl/assets/simplified-platformer-pack
